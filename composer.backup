@@ -36,12 +36,13 @@
     "nunomaduro/collision": "^8.0",
     "pestphp/pest": "^2.0",
     "pestphp/pest-plugin-laravel": "^2.0",
-    "spatie/laravel-ignition": "^2.4",
-    "orchestra/testbench": "^6.0"
+    "spatie/laravel-ignition": "^2.4"
   },
   "autoload": {
     "psr-4": {
-      "DavitLee88\\InertiaMantine\\": "src/"
+      "App\\": "app/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/"
     }
   },
   "autoload-dev": {
@@ -50,9 +51,20 @@
     }
   },
   "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
     "post-update-cmd": [
-      "npm install @mantine/core @mantine/hooks @mantine/form @mantine/dates dayjs @mantine/charts recharts@2 @mantine/notifications @mantine/code-highlight @mantine/tiptap @tabler/icons-react @tiptap/react @tiptap/extension-link @tiptap/starter-kit @mantine/dropzone @mantine/carousel embla-carousel-react @mantine/spotlight @mantine/modals @mantine/nprogress",
-      "npm install --save-dev postcss postcss-preset-mantine postcss-simple-vars"
+      "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi",
+      "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+      "@php artisan migrate --graceful --ansi"
     ]
   },
   "extra": {
